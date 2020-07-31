@@ -1,0 +1,9 @@
+4
+7
+request_arrival 1
+decision 0
+propagation 2
+request_arrival 3
+execution 1
+propagation 2
+delivery 1
