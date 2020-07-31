@@ -182,6 +182,7 @@ void setMap(map<string, int> &eventMap)
 
 int main(int argc, char* argv[])
 {
+	// test
 	/* initialize random seed: */
 	srand (time(NULL));
 
