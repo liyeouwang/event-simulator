@@ -95,7 +95,7 @@ void showAllEvents(int num_events, vector<Event> vec_event)
 
 	}
 	cout<<endl;
-}
+}  
 
 void scheduleNewEvent(vector<Event> &vec_event, Event currentEvent, Event newEvent)
 {
@@ -219,8 +219,78 @@ int main(int argc, char* argv[])
 		}
 		showAllEvents(num_events, vec_event);
 	}
-	// hi~
+
+	//new modify:
+	for(int t=1; t<simulationTime; t++)
+	{
+		for(int s=0; s<num_servers; s++)
+		{
+			if(! eventQueue[s].empty)
+			{
+				Event currentEvent = vec_event.front();
+				execute(currentEvent);
+				if(currentEvent == || currentEvent == ) //if currentEvent is REQUEST_ARRIVAL, DECISION or EXECUTION, it will create new event.
+				{
+					Event newEvent = createEvent(currentEvent); //add to buffer
+				}
+				
+			}
+		}
+		//if there is new event 
+		scheduleNewEvent(newEvent, s); //including dispatch?  
+	}
+	// for each time step t
+		//for each server s 
+			//if(!eventQueue[s].empty)
+				//currentEvent = runEvent()
+				//if(current.type == )
+					//newEvent = createEvent(currentEvent)
+						//if(newEvent.type == )
+							//dispatch(task, s)
+
+
 	return 0;
+}
+Event createEvent(Event currentEvent)
+{
+	switch(currentEvent->type)
+	{
+		case(REQUEST_ARRIVAL):
+			//DECISION
+			newEvent.type = DECISION;
+			break;
+		case(DECISION):  //but it depends on the server(itself and others) status  
+		{
+			//PROPAGATION or EXECUTION or DELIVERY
+			int nextPossibleEvents[3]={EXECUTION, PROPAGATION, DELIVERY};
+			int randIndex = rand() % 3;
+			newEvent.type = nextPossibleEvents[randIndex];				
+			break;
+		}
+			
+		case(PROPAGATION):
+		{
+			break;
+		}
+			
+		case(EXECUTION):
+			//delivery or propagation
+			newEvent.type = newEvent.type = (rand() > RAND_MAX/2) ? DELIVERY : PROPAGATION;
+			break;
+		case(DELIVERY):
+			//non
+			newEvent.type = DELIVERY;
+			break;
+		default:
+			break;
+	}
+
+}
+
+scheduleNewEvent(Event newEvent, Server s) //dispatch task
+{
+	//decide  destination? or just direction?
+	//decide 
 }
 
 	//for each time steps 
