@@ -1,16 +1,33 @@
+import os
+import sys
+sys.path.append(".")
+from Task import Task
+from Event import Event
+from Server import Server
+
 class Simulator:
     def __init__(self, server_num, all_tasks):
-        self.server_num = server_num # number of servers, like 7
+        self.server_num = server_num # number of servers, ex: 7
         # To differentiate with tasks in server, name it "all_tasks"
         self.all_tasks = all_tasks # can be a list of tuple [(server_id, Task)]
+        Server.server_sum = server_num
+        Server.all_tasks = [[] for i in range(server_num)]
         self.servers = [Server(i) for i in range(server_num)] # list of Server
         self.initialize_servers()
-        self.events = [] # list of Event
+        self.events = [] # events of each server in time slot
         self.time_slot = 1
-    
+
+    def __str__(self):
+        s = ''
+        s += 'Number of servers: {}\n'.format(len(self.servers))
+        for i in range(len(self.servers)):
+            s += 'Server {}: {}\n'.format(i, str(self.servers[i]))
+        return s
+
     def initialize_servers(self):
-        # add tasks into servers
-        pass
+        for task in self.all_tasks:
+            self.servers[task[0]].add_task(task[1])
+        return
 
     def show_status(self):
         # print out current status
@@ -18,19 +35,22 @@ class Simulator:
         # All Server status
         # What round is this?
         print("======= Time Slot " + str(self.time_slot) + " =======")
-        pass
+        return
 
     def run(self):
         # Run the simulation. Can be a while loop?
         # run all server 
         # and then run synchronization
         while True:
-            if self.time_slot > 10:
+            if self.time_slot > 15:
                 break
             recent_events = []
             self.show_status()
             for i in range(self.server_num):
-                recent_events.append(self.run_server(i))
+                e = self.run_server(i)
+                print(e)
+                recent_events.append(e)
+                
             
             self.run_sync(recent_events)
 
@@ -38,7 +58,7 @@ class Simulator:
             self.time_slot += 1
    
     def run_server(self, server_id):
-        # Time to run this server~
+        # Time to run this server
         # get event from server
         event = self.servers[server_id].run()
         return event
@@ -50,7 +70,8 @@ class Simulator:
             self.event_dealer(event)
     
     def record(self, recent_events):
-        self.events.extend(recent_events)
+        # add the info into history
+        self.events.append(recent_events)
         pass
 
     
@@ -60,28 +81,7 @@ class Simulator:
 
 
 
-class Server:
-    def __init__(self, tasks):
-        self.tasks = tasks # a list of Task
-
-    def event_handler(self, event):
-        # Handle the event. Maybe add tasks to taskQueue? Or anything...
-        pass
-    
-    def run(self):
-        # return event. can be none?
-        pass
 
 
-class Task:
-    def __init__(self, name):
-        self.name = name
-        return
 
-class Event:
-    def __init__(self):
-        return
 
-        
-s = Simulator(5, [])
-s.run()
