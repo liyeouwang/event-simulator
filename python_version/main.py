@@ -14,8 +14,6 @@ def read_input_task(filename):
 
 
 tasks = read_input_task('input_task.dat')
-# s = Simulator(5, [(0, Task("1", "hello world")), (0, Task("1", "hello world")), (1, Task("1", "hello world")), (1, Task("2", "hello world")), (3, Task("3", "hello world")), (1, Task("4", "hello world"))])
-# print(tasks)
 s = Simulator(5, tasks)
 print(s)
 s.run()

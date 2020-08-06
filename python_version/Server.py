@@ -29,7 +29,7 @@ class Server:
     
     def run(self):
         if len(self.tasks) == 0:
-            return Event("Idle", "Do nothing.")
+            return Event("Idle")
 
         # ====== TODO =======
         # This part of code should decide how to deal with the task queue.
@@ -43,12 +43,12 @@ class Server:
         if self.tasks[0].is_done():
             # Delivery
             t = self.tasks.pop()
-            e = Event("Delivery: " + str(t))
+            e = Event(name="Delivery", task=t, info={"source":self.server_id, "dest": (self.server_id+1)%5})
+
         else:
             # Execution:
             self.tasks[0].just_do_it(1)
-            e = Event("Execution: " + str(self.tasks[0]))
-
+            e = Event(name="Execution", task=self.tasks[0])
 
         return e
     

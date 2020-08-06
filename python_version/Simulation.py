@@ -48,8 +48,10 @@ class Simulator:
             self.show_status()
             for i in range(self.server_num):
                 e = self.run_server(i)
-                print(e)
+                print('Server ' + str(i) + ': ' + str(e))
                 recent_events.append(e)
+
+                
                 
             
             self.run_sync(recent_events)
@@ -76,6 +78,8 @@ class Simulator:
 
     
     def event_dealer(self, event):
+        if event.name == "deliveru":
+            event.info["source"]
         pass
 
 

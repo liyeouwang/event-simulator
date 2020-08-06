@@ -1,11 +1,16 @@
 from Task import Task
 
 class Event:
-    def __init__(self, name="", detail="No description."):
-        self.name = name
+    def __init__(self, name="", task=None, detail="No description.", info={}):
+        self.name = name # Delivery, Execution, Propagation
         self.detail = detail
+        self.task = task 
+        self.info = info # fill in anything you want
         return
         
     def __str__(self):
-        return self.name + ": " + self.detail
+        s = ""
+        s += self.name
+        s += (' ' + str(self.task))
+        return s
         
