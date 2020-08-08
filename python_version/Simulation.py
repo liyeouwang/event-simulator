@@ -78,10 +78,15 @@ class Simulator:
 
     
     def event_dealer(self, event):
-        if event.name == "deliveru":
+        if event.name == "delivery":
             event.info["source"]
         pass
 
+
+    def assign_task(self, server_id, task):
+        self.servers[server_id].tasks.add_task(task)
+        self.servers[server_id].new_task = True
+        return
 
 
 

@@ -11,6 +11,7 @@ class Server:
     def __init__(self, server_id):
         self.tasks = self.all_tasks[server_id] # a list of Task
         self.server_id = server_id
+        self.new_task = False 
 
     def event_handler(self, event):
         # Handle the event. Maybe add tasks to taskQueue? Or anything...
@@ -29,16 +30,14 @@ class Server:
     
     def run(self):
 
-        # maybe two processors 
-        # one makes decisions ,the other doing execution
+        # if there is a new task arrival, return event type: decision
+        e = None
+        if self.new_task == True:
+            e = Event(name="Decision", task=self.tasks[-1])
+            return e
+                     
 
-        # ====decision processor==== 
-        # decision making:
-        # if there is request arrival 
-        # decide whether to handle it by itself or propagate to neighbor 
-
-
-        # ==== execution processor====
+        # if there is not new task arrival, continue to do execution 
         if len(self.tasks) == 0:
             return Event("Idle")
 
@@ -67,4 +66,8 @@ class Server:
     def add_task(self, task):
         self.tasks.append(task)
         return
+
+    def newTask_arrival():
+        self.add_task(self, task)
+
     
