@@ -28,6 +28,17 @@ class Server:
         return s
     
     def run(self):
+
+        # maybe two processors 
+        # one makes decisions ,the other doing execution
+
+        # ====decision processor==== 
+        # decision making:
+        # if there is request arrival 
+        # decide whether to handle it by itself or propagate to neighbor 
+
+
+        # ==== execution processor====
         if len(self.tasks) == 0:
             return Event("Idle")
 
@@ -42,7 +53,7 @@ class Server:
         e = None
         if self.tasks[0].is_done():
             # Delivery
-            t = self.tasks.pop()
+            t = self.tasks.pop(0)
             e = Event(name="Delivery", task=t, info={"source":self.server_id, "dest": (self.server_id+1)%5})
 
         else:
