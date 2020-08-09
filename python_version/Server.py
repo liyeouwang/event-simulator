@@ -12,6 +12,8 @@ class Server:
         self.tasks = self.all_tasks[server_id] # a list of Task
         self.server_id = server_id
         self.new_task = False 
+        self.max_tasks = 5
+        self.decision = False
 
     def event_handler(self, event):
         # Handle the event. Maybe add tasks to taskQueue? Or anything...
@@ -32,12 +34,22 @@ class Server:
 
         # if there is a new task arrival, return event type: decision
         e = None
+        if self.decision == True:
+            # check out the capacity itself
+            # or maybe compare the priority with other tasks  
+            if len(self.tasks) >= self.max_tasks:
+                e = Event(name="Propagation", task=self.tasks[-1])
+                return e
+            else:
+                pass
+
+            
         if self.new_task == True:
             e = Event(name="Decision", task=self.tasks[-1])
             return e
                      
 
-        # if there is not new task arrival, continue to do execution 
+        # if there is no new task arrival, continue to do execution 
         if len(self.tasks) == 0:
             return Event("Idle")
 
@@ -67,7 +79,6 @@ class Server:
         self.tasks.append(task)
         return
 
-    def newTask_arrival():
-        self.add_task(self, task)
+
 
     

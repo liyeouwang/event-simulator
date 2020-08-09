@@ -82,11 +82,18 @@ class Simulator:
             event.info["source"]
         pass
 
+        # decision
+        if event.name == "Decision"
+            self.servers[event.server].decision = True
+        # propagation 
+        if event.name == "Propagation"
+            self.assign_task(event.server + 1, event.task)
 
     def assign_task(self, server_id, task):
-        self.servers[server_id].tasks.add_task(task)
+        self.servers[server_id].add_task(task)
         self.servers[server_id].new_task = True
         return
+
 
 
 
