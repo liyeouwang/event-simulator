@@ -16,6 +16,10 @@ using namespace std;
 #define EXECUTION 3
 #define DELIVERY 4
 
+class Server
+{
+
+};
 class Event
 {
 	public:
@@ -221,24 +225,9 @@ int main(int argc, char* argv[])
 	}
 
 	//new modify:
-	for(int t=1; t<simulationTime; t++)
-	{
-		for(int s=0; s<num_servers; s++)
-		{
-			if(! eventQueue[s].empty)
-			{
-				Event currentEvent = vec_event.front();
-				execute(currentEvent);
-				if(currentEvent == || currentEvent == ) //if currentEvent is REQUEST_ARRIVAL, DECISION or EXECUTION, it will create new event.
-				{
-					Event newEvent = createEvent(currentEvent); //add to buffer
-				}
-				
-			}
-		}
-		//if there is new event 
-		scheduleNewEvent(newEvent, s); //including dispatch?  
-	}
+	runSimulator();
+
+	
 	// for each time step t
 		//for each server s 
 			//if(!eventQueue[s].empty)
@@ -251,6 +240,108 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+void runSimulator()
+{
+	for(int t=1; t<simulationTime; t++)
+	{ 
+		for(int s=0; s<num_servers; s++)
+		{
+			//execute events from event queue
+			if(! eventQueue[s].empty)
+			{
+				Event currentEvent = eventQueue[s].front();
+				//server.processEvent(currentEvent);
+				//processEvent(currentEvent, s);
+			}
+		}
+
+		scheduleNewEvent();
+	}
+}
+
+Event processEvent(Event currentEvent)
+{
+	Event newEvent;
+	switch(currentEvent->type)
+	{
+		case(REQUEST_ARRIVAL):
+		{
+			//DECISION
+			newEvent = request_arrival(currentEvent);
+			return newEvent;
+			break;
+		}
+					
+		case(PROPAGATION):
+		{
+			newEvent = propagation(vector<Event> eventQueue[]);
+			return newEvent;
+			break;
+		}
+			
+		case(EXECUTION):
+		{
+			newEvent = execution(currentEvent);
+			return newEvent;
+			break;
+		}
+		case(DELIVERY):
+		{
+			//non
+			newEvent = NULL;
+			return newEvent;
+			break;			
+		}
+		default:
+			break;
+	}	
+}
+
+//decide whether it should create DELIVERY or PROPAGATION
+Event execution(Event currentEvent)
+{
+	//check the position of vehicle
+	//(Task should have a field recording the corresponding vehicle)
+	//return DELIVERY or PROPAGATION
+}
+
+//when the event is request_arrival
+//decide whether it should create EXECUTION or PROPAGATION
+Event request_arrival(Event currentEvent)
+{
+	
+	//check the server status of itself
+
+	//check my server status 
+	//check if the todo tasks are more than the threshold 
+	//check task queue?
+	/*
+	if(taskQueue.size > threshold)
+	{
+		newEvent.type = PROPAGATION;
+	}
+	*/
+
+	//return EXECUTION or PROPAGATION
+}
+
+//decide which way to send 
+Event  propagation(vector<Event> eventQueue[])
+{
+	//look over the servers beside it 
+	//compare their capability
+
+	//it will create a new event in the server it propagates to
+
+	//put task into buffer 
+
+}
+void scheduleNewEvent()
+{
+
+}
+
+
 Event createEvent(Event currentEvent)
 {
 	switch(currentEvent->type)
@@ -261,6 +352,7 @@ Event createEvent(Event currentEvent)
 			break;
 		case(DECISION):  //but it depends on the server(itself and others) status  
 		{
+			
 			//PROPAGATION or EXECUTION or DELIVERY
 			int nextPossibleEvents[3]={EXECUTION, PROPAGATION, DELIVERY};
 			int randIndex = rand() % 3;
