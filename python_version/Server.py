@@ -39,6 +39,7 @@ class Server:
             # or maybe compare the priority with other tasks  
             if len(self.tasks) >= self.max_tasks:
                 e = Event(name="Propagation", task=self.tasks[-1])
+                self.tasks.pop()
                 return e
             else:
                 pass

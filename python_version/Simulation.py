@@ -76,7 +76,8 @@ class Simulator:
         self.events.append(recent_events)
         pass
 
-    
+
+    # not done    
     def event_dealer(self, event):
         if event.name == "delivery":
             event.info["source"]
@@ -86,6 +87,7 @@ class Simulator:
         if event.name == "Decision"
             self.servers[event.server].decision = True
         # propagation 
+        # propagate the task to next server 
         if event.name == "Propagation"
             self.assign_task(event.server + 1, event.task)
 
