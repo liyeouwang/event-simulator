@@ -1,9 +1,10 @@
 class Task:
-    def __init__(self, name="", duration=1, have_done=0, detail="No task description"):
+    def __init__(self, name="", duration=1, have_done=0, detail="No task description", priority):
         self.name = name # Ex: Video streaming, AI computing
         self.detail = detail
         self.duration = duration
         self.have_done = have_done
+        self.priority = priority
         return
     
     def __str__(self):

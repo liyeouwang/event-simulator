@@ -38,7 +38,7 @@ class Server:
             # check out the capacity itself
             # or maybe compare the priority with other tasks  
             if len(self.tasks) >= self.max_tasks:
-                e = Event(name="Propagation", task=self.tasks[-1])
+                e = Event(name="Propagation", task=self.tasks[-1], server=self.server_id)
                 self.tasks.pop()
                 return e
             else:
@@ -46,7 +46,7 @@ class Server:
 
             
         if self.new_task == True:
-            e = Event(name="Decision", task=self.tasks[-1])
+            e = Event(name="Decision", task=self.tasks[-1], server=self.server_id)
             return e
                      
 
