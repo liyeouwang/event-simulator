@@ -84,12 +84,14 @@ class Simulator:
         pass
 
         # decision
-        if event.name == "Decision"
+        if event.name == "Decision":
             self.servers[event.server].decision = True
         # propagation 
         # propagate the task to next server 
-        if event.name == "Propagation"
+        if event.name == "Propagation":
             self.assign_task(event.server + 1, event.task)
+        #if it is execution, do nothing 
+        #scheduling is server's job
 
     def assign_task(self, server_id, task):
         self.servers[server_id].add_task(task)

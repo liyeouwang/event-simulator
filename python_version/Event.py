@@ -1,7 +1,7 @@
 from Task import Task
 
 class Event:
-    def __init__(self, name="", task=None, detail="No description.", info={}, server):
+    def __init__(self, name="", task=None, detail="No description.", info={}, server=0):
         self.name = name # Delivery, Execution, Propagation
         self.detail = detail
         self.task = task 
