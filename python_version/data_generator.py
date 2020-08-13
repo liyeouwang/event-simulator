@@ -1,8 +1,13 @@
 from random import randint, choice
+from util import read_config
 
-SERVER_NUM = 5
-DATA_NUM = 15
-TASKS = ["video_streaming", "trolley_problem", "dense_computing"]
+
+
+data = read_config('config.json')
+
+SERVER_NUM = data['server_num']
+TASKS = [t['name'] for t in data['tasks_config']]
+DATA_NUM = 10
 FILENAME = "input_task.dat"
 
 with open(FILENAME, "w") as f:

@@ -1,19 +1,24 @@
 import os
 import sys
+from random import randint, choice, uniform
 sys.path.append(".")
 from Task import Task
 from Event import Event
 from Server import Server
 
 class Simulator:
-    def __init__(self, server_num, all_tasks):
-        self.server_num = server_num # number of servers, ex: 7
-        # To differentiate with tasks in server, name it "all_tasks"
-        self.all_tasks = all_tasks # can be a list of tuple [(server_id, Task)]
-        Server.server_sum = server_num
-        Server.all_tasks = [[] for i in range(server_num)]
-        self.servers = [Server(i) for i in range(server_num)] # list of Server
-        self.initialize_servers()
+    def __init__(self, config):
+        self.config = config
+        self.server_num = config["server_num"]
+
+        # initialize class attribute of Server
+        Server.server_num = self.server_num
+        Server.all_tasks = [[] for i in range(self.server_num)]
+
+        # Build servers 
+        self.servers = [Server(i) for i in range(self.server_num)]
+
+
         self.events = [] # events of each server in time slot
         self.time_slot = 1
 
@@ -24,10 +29,14 @@ class Simulator:
             s += 'Server {}: {}\n'.format(i, str(self.servers[i]))
         return s
 
-    def initialize_servers(self):
-        for task in self.all_tasks:
+    def add_tasks_to_servers(self, data):
+        # data format: [(server_id, Task)]
+        for task in data:
             self.servers[task[0]].add_task(task[1])
         return
+        # for task in self.all_tasks:
+        #     self.servers[task[0]].add_task(task[1])
+        # return
 
     def show_status(self):
         # print out current status
@@ -50,13 +59,11 @@ class Simulator:
                 e = self.run_server(i)
                 print('Server ' + str(i) + ': ' + str(e))
                 recent_events.append(e)
-
-                
-                
             
             self.run_sync(recent_events)
 
             self.record(recent_events)
+            self.random_insert_task()
             self.time_slot += 1
    
     def run_server(self, server_id):
@@ -98,10 +105,13 @@ class Simulator:
         self.servers[server_id].have_new_task = True
         return
 
-
-
-
-
-
-
-
+    def random_insert_task(self):
+        tasks_config = self.config["tasks_config"]
+        for server in self.servers:
+            for task_config in tasks_config:
+                if uniform(0, 1) < task_config["occur_probability"]:
+                    t = Task(name=task_config["name"],
+                            duration=randint(task_config["duration_range"][0], task_config["duration_range"][1]),
+                            priority=task_config["priority"]) 
+                    server.add_task(t)
+        return
