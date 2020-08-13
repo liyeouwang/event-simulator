@@ -85,7 +85,7 @@ class Simulator:
 
         # decision
         if event.name == "Decision":
-            self.servers[event.server].decision = True
+            self.servers[event.server].make_decision = True
         # propagation 
         # propagate the task to next server 
         if event.name == "Propagation":
@@ -95,7 +95,7 @@ class Simulator:
 
     def assign_task(self, server_id, task):
         self.servers[server_id].add_task(task)
-        self.servers[server_id].new_task = True
+        self.servers[server_id].have_new_task = True
         return
 
 
