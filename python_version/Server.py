@@ -34,7 +34,7 @@ class Server:
 
         # if there is a new task arrival, return event type: decision
         e = None
-        if self.decision == True:
+        if self.decision == True: #
             # check out the capacity itself
             # or maybe compare the priority with other tasks  
             if len(self.tasks) >= self.max_tasks:
@@ -45,7 +45,9 @@ class Server:
                 pass
 
             
-        if self.new_task == True:
+
+
+        if self.new_task == True: #have_new_task 
             e = Event(name="Decision", task=self.tasks[-1], server=self.server_id)
             return e
                      
