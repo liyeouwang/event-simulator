@@ -6,7 +6,7 @@ class Server:
     # Their own tasks are stored in all_tasks[server_id]
     # Let self.tasks = all_tasks[server_id]. Just use self.tasks, since this will make it more clear.
     all_tasks = [] 
-    server_sum = 0
+    server_num = 0
 
     def __init__(self, server_id):
         self.tasks = self.all_tasks[server_id] # a list of Task
