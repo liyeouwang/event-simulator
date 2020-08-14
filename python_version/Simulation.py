@@ -82,7 +82,7 @@ class Simulator:
         self.record(recent_events)
         self.random_insert_task()
         self.time_slot += 1
-        # self.show_status()
+        self.show_status()
 
     
     def run_server(self, server_id):

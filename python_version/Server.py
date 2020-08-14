@@ -50,6 +50,7 @@ class Server:
 
         if self.have_new_task == True: #have_new_task 
             e = Event(name="Decision", task=self.tasks[-1], server_id=self.server_id)
+            self.have_new_task = False
             return e
                      
 

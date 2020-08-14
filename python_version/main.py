@@ -19,10 +19,13 @@ s = Simulator(config)
 # Add some initial tasks to simulator
 tasks = read_input_task('input_task.dat')
 s.add_tasks_to_servers(tasks) 
-s.run()
+# s.run()
 
-
-# tasks = read_input_task('input_task.dat')
-# s = Simulator(5, tasks)
-# print(s)
-s.run()
+while True:
+    command = input('input command...\n')
+    if command == 's':
+        s.show_status()
+    if command == 'r':
+        s.run_one()
+        print('run')
+    
