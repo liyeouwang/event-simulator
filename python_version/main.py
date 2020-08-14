@@ -17,8 +17,8 @@ config = read_config('config.json')
 s = Simulator(config)
 
 # Add some initial tasks to simulator
-# tasks = read_input_task('input_task.dat')
-# s.add_tasks_to_servers(tasks) 
+tasks = read_input_task('input_task.dat')
+s.add_tasks_to_servers(tasks) 
 s.run()
 
 

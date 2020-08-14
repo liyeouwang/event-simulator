@@ -3,13 +3,13 @@
     "tasks_config": [
         {
             "name": "video_streaming",
-            "occur_probability": 0.1,
-            "duration_range": [1, 10],
+            "occur_probability": 0.05,
+            "duration_range": [1, 5],
             "priority": 5
         },
         {
             "name": "dense_computing",
-            "occur_probability": 0.05,
+            "occur_probability": 0.02,
             "duration_range": [5, 15],
             "priority": 3
         },
