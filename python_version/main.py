@@ -1,6 +1,7 @@
 from Simulation import Simulator
 from Task import Task
 from util import read_config
+import json
 
 def read_input_task(filename):
     res = []
@@ -19,13 +20,22 @@ s = Simulator(config)
 # Add some initial tasks to simulator
 tasks = read_input_task('input_task.dat')
 s.add_tasks_to_servers(tasks) 
-# s.run()
+s.run(10000)
+data = s.get_evaluation_data()
+with open('evaluation_data.json', 'w') as f:
+    json.dump(data, f)
+print(data['data_of_slot'][-1])
 
-while True:
-    command = input('input command...\n')
-    if command == 's':
-        s.show_status()
-    if command == 'r':
-        s.run_one()
-        print('run')
+# This is for testing
+# while True:
+#     command = input('input command...\n')
+#     if command == 's':
+#         s.show_status()
+#     if command == 'r':
+#         s.run_one()
+#         print('run')
+#     if command == 'd':
+#         data = json.dumps(s.get_pack_data())
+        
+#         print(data)
     

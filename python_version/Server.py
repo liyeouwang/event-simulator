@@ -45,8 +45,6 @@ class Server:
             else:
                 pass
 
-            
-
 
         if self.have_new_task == True: #have_new_task 
             e = Event(name="Decision", task=self.tasks[-1], server_id=self.server_id)
@@ -83,7 +81,3 @@ class Server:
     def add_task(self, task):
         self.tasks.append(task)
         return
-
-
-
-    
