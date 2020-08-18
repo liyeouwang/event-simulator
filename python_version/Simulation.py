@@ -105,11 +105,19 @@ class Simulator:
 
     # not done    
     def event_dealer(self, event):
+
+        # deal with propagation list
+        if event == None:
+            return
+        if event.name == "Propagation":
+            for task in self.servers[event.server_id].propagation_tasks:
+                self.assign_task((event.server_id + 1) % self.server_num, event.get_task())
+  
         if event.name == "Delivery":
             t = event.get_task()
             t.deliver(self.time_slot)
-        elif event.name == "Decision":
-            self.servers[event.server_id].decision = True
+        #elif event.name == "Decision":
+        #    self.servers[event.server_id].decision = True
         elif event.name == "Propagation":
             # propagation 
             # propagate the task to next server 
