@@ -3,7 +3,7 @@
     "tasks_config": [
         {
             "name": "video_streaming",
-            "occur_probability": 0.05,
+            "occur_probability": 0.1,
             "duration_range": [1, 5],
             "priority": 5
         },

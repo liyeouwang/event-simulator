@@ -22,6 +22,8 @@ class Simulator:
         self.events = [] # events of each server in time slot
         self.tasks = []
         self.time_slot = 1
+        self.data_of_slot = []
+        self.finished_task_num = 0
 
     def __str__(self):
         s = ''
@@ -60,10 +62,10 @@ class Simulator:
         waiting_time = [t.get_waiting_time() if t.is_delivered() else None for t in self.tasks]
         return waiting_time
 
-    def run(self):
+    def run(self, round=15):
 
         while True:
-            if self.time_slot > 15:
+            if self.time_slot > round:
                 break
             self.run_one()
     
@@ -82,7 +84,7 @@ class Simulator:
         self.record(recent_events)
         self.random_insert_task()
         self.time_slot += 1
-        self.show_status()
+        # self.show_status()
 
     
     def run_server(self, server_id):
@@ -100,7 +102,10 @@ class Simulator:
     def record(self, recent_events):
         # add the info into history
         self.events.append(recent_events)
-        pass
+        self.data_of_slot.append({
+            'unfinished_task_num': len(self.tasks) - self.finished_task_num,
+        })
+        return
 
 
     # not done    
@@ -116,8 +121,9 @@ class Simulator:
         if event.name == "Delivery":
             t = event.get_task()
             t.deliver(self.time_slot)
-        #elif event.name == "Decision":
-        #    self.servers[event.server_id].decision = True
+            self.finished_task_num += 1
+        elif event.name == "Decision":
+            self.servers[event.server_id].decision = True
         elif event.name == "Propagation":
             # propagation 
             # propagate the task to next server 
@@ -153,6 +159,44 @@ class Simulator:
                     self.assign_task(i, t)
 
         return
+
+    def get_pack_data(self):
+        data = {
+            'server_num': self.server_num,
+            'tasks': [t.__dict__ for t in self.tasks],
+            'events': [[e.__dict__ for e in event] for event in self.events]
+        }
+        return data
+
+    def get_evaluation_data(self):
+        # Prun task data
+        finished_tasks = []
+        for t in self.tasks:
+            if t.is_delivered():
+                finished_tasks.append({
+                    'name': t.name,
+                    'waiting_time': t.get_waiting_time(),
+                    'priority': t.priority,
+                    'duration': t.duration
+                })
+
+        # Prun event data
+        brief_events = []
+        for i, event in enumerate(self.events):
+            for e in event:
+                brief_events.append({
+                    'time_slot': i,
+                    'server_id': e.server_id,
+                    'name': e.name
+                })
+
+        data = {
+            'finished_task': finished_tasks,
+            'events': brief_events,
+            'data_of_slot': self.data_of_slot
+        }
+
+        return data
 
 
     

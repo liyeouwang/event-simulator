@@ -92,10 +92,8 @@ class Server:
             self.propagation_tasks.append(tasks)
             self.new_tasks.pop()
             return Event(name="Propagation", task=task, server_id=self.server_id)
-
         else:
             self.tasks.append(task)
             self.new_tasks.pop()
             return None 
 
-    
