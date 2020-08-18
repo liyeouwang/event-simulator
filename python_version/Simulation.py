@@ -129,7 +129,6 @@ class Simulator:
 
     def assign_task(self, server_id, task):
         self.servers[server_id].add_task(task)
-        self.servers[server_id].have_new_task = True
         return
 
     def create_task(self, name="", duration=1, have_done=0, 

@@ -14,7 +14,6 @@ class Server:
     def __init__(self, server_id):
         self.tasks = self.all_tasks[server_id] # a list of Task
         self.server_id = server_id
-        self.have_new_task = False 
         self.max_tasks = 5
         #self.make_decision = False
         self.new_tasks = []
