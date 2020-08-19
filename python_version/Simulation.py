@@ -18,11 +18,13 @@ class Simulator:
         # Build servers 
         self.servers = [Server(i) for i in range(self.server_num)]
 
-
         self.events = [] # events of each server in time slot
         self.tasks = []
         self.time_slot = 1
-        self.data_of_slot = []
+        self.data_of_slot = {
+            'unfinished_task_num': [],
+            'server_loading': []
+        }
         self.finished_task_num = 0
 
     def __str__(self):
@@ -102,9 +104,8 @@ class Simulator:
     def record(self, recent_events):
         # add the info into history
         self.events.append(recent_events)
-        self.data_of_slot.append({
-            'unfinished_task_num': len(self.tasks) - self.finished_task_num,
-        })
+        self.data_of_slot['unfinished_task_num'].append(len(self.tasks) - self.finished_task_num)
+        self.data_of_slot['server_loading'].append([len(s.tasks) for s in self.servers])
         return
 
 
@@ -143,6 +144,8 @@ class Simulator:
     def random_insert_task(self):
         tasks_config = self.config["tasks_config"]
         for i in range(self.server_num):
+            if i % 2 == 0:
+                continue
             for task_config in tasks_config:
                 if uniform(0, 1) < task_config["occur_probability"]:
                     t = self.create_task(name=task_config["name"],
@@ -183,8 +186,8 @@ class Simulator:
                 })
 
         data = {
-            'finished_task': finished_tasks,
-            'events': brief_events,
+            # 'finished_task': finished_tasks,
+            # 'events': brief_events,
             'data_of_slot': self.data_of_slot
         }
 
