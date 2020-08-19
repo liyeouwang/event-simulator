@@ -14,8 +14,8 @@ class Simulator:
         # initialize class attribute of Server
         Server.server_num = self.server_num
         Server.all_tasks = [[] for i in range(self.server_num)]
-        Server.propagation_tasks = [[] for i in range(self.server_num)]
-        Server.new_tasks = [[] for i in range(self.server_num)]
+        Server.all_propagation_tasks = [[] for i in range(self.server_num)]
+        Server.all_new_tasks = [[] for i in range(self.server_num)]
 
         # Build servers 
         self.servers = [Server(i) for i in range(self.server_num)]
@@ -25,7 +25,8 @@ class Simulator:
         self.time_slot = 1
         self.data_of_slot = {
             'unfinished_task_num': [],
-            'server_loading': []
+            'server_loading_task': [],
+            'server_loading_new_task': []
         }
         self.finished_task_num = 0
 
@@ -88,6 +89,8 @@ class Simulator:
 
         self.record(recent_events)
         self.random_insert_task()
+        print(self.finished_task_num, len(self.tasks))
+
         self.time_slot += 1
         # self.show_status()
 
@@ -108,7 +111,9 @@ class Simulator:
         # add the info into history
         self.events.append(recent_events)
         self.data_of_slot['unfinished_task_num'].append(len(self.tasks) - self.finished_task_num)
-        self.data_of_slot['server_loading'].append([len(s.tasks) for s in self.servers])
+        self.data_of_slot['server_loading_task'].append([len(s.tasks) for s in self.servers])
+        self.data_of_slot['server_loading_new_task'].append([len(s.new_tasks) for s in self.servers])
+
         return
 
 

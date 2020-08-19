@@ -1,15 +1,15 @@
 {
-    "server_num": 10,
+    "server_num": 3,
     "tasks_config": [
         {
             "name": "video_streaming",
-            "occur_probability": 0.05,
+            "occur_probability": 0.2,
             "duration_range": [1, 5],
             "priority": 5
         },
         {
             "name": "dense_computing",
-            "occur_probability": 0.05,
+            "occur_probability": 0.5,
             "duration_range": [5, 15],
             "priority": 3
         },

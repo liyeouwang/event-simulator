@@ -8,16 +8,16 @@ class Server:
     all_tasks = [] 
     server_num = 0
 
-    new_tasks = []
-    propagation_tasks = []
+    all_new_tasks = []
+    all_propagation_tasks = []
 
     def __init__(self, server_id):
         self.tasks = self.all_tasks[server_id] # a list of Task
         self.server_id = server_id
         self.max_tasks = 5
         #self.make_decision = False
-        self.new_tasks = self.new_tasks[server_id]
-        self.propagation_tasks = self.propagation_tasks[server_id]
+        self.new_tasks = self.all_new_tasks[server_id]
+        self.propagation_tasks = self.all_propagation_tasks[server_id]
 
 
     def event_handler(self, event):
@@ -30,9 +30,18 @@ class Server:
 
     def __str__(self):
         s = ''
-        s += 'Task queue\n'
+        s += '\n----Task queue----\n'
         for task in self.tasks:
             s += str(task) + '\n'
+
+        s += '----New task----\n'
+        for t in self.new_tasks:
+            s += str(t) + '\n'
+
+        s += '----Propagation task----\n'
+        for t in self.propagation_tasks:
+            s += str(t) + '\n'
+
         return s
     
     def run(self):
@@ -58,7 +67,8 @@ class Server:
         # ====== propagation buffer ======
         e_prop = None 
         if len(self.propagation_tasks) != 0:
-            e_prop = Event(name="Propagation", task=self.propagation_tasks[0], server_id=self.server_id)
+            t = self.propagation_tasks[0]
+            e_prop = Event(name="Propagation", task=t, server_id=self.server_id)
             self.propagation_tasks.pop(0)
 
         # ====== execution part ======
