@@ -8,16 +8,16 @@ class Server:
     all_tasks = [] 
     server_num = 0
 
-    #new_tasks = []
-    #propagation_tasks = []
+    new_tasks = []
+    propagation_tasks = []
 
     def __init__(self, server_id):
         self.tasks = self.all_tasks[server_id] # a list of Task
         self.server_id = server_id
         self.max_tasks = 5
         #self.make_decision = False
-        self.new_tasks = []
-        self.propagation_tasks = []
+        self.new_tasks = self.new_tasks[server_id]
+        self.propagation_tasks = self.propagation_tasks[server_id]
 
 
     def event_handler(self, event):
@@ -51,8 +51,8 @@ class Server:
         # 5. return event 
       
         # ====== decision part (propagate or add to task queue) ======
-        if len(self.new_tasks) != 0: 
-            # make decision (now only consider single task)
+        while len(self.new_tasks):
+            # make decision 
             self.make_decision(self.new_tasks[0])
 
         # ====== propagation buffer ======
@@ -79,7 +79,7 @@ class Server:
         if e_prop != None:
             return e_prop
         elif e_deli != None:
-            return e_deli
+            return e_deli 
         else:
             return e
     

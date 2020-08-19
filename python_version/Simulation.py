@@ -14,6 +14,8 @@ class Simulator:
         # initialize class attribute of Server
         Server.server_num = self.server_num
         Server.all_tasks = [[] for i in range(self.server_num)]
+        Server.propagation_tasks = [[] for i in range(self.server_num)]
+        Server.new_tasks = [[] for i in range(self.server_num)]
 
         # Build servers 
         self.servers = [Server(i) for i in range(self.server_num)]
@@ -26,6 +28,7 @@ class Simulator:
             'server_loading': []
         }
         self.finished_task_num = 0
+
 
     def __str__(self):
         s = ''
