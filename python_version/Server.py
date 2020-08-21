@@ -92,7 +92,6 @@ class Server:
             # e_deli = Event(name="Delivery", task=t, server_id=self.server_id)
             self.status['state'] = 'Delivery'
             self.status['task'] = t
-            t.deliver(self.time_slot)
 
         else:
             # Execution:

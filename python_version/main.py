@@ -22,19 +22,15 @@ s = Simulator(config)
 tasks = read_input_task('input_task.dat')
 s.add_tasks_to_servers(tasks) 
 
-# s.run(50)
-# data = s.get_evaluation_data()
 # with open('evaluation_data.json', 'w') as f:
 #     json.dump(data, f)
 
 
 # plt.plot(data['data_of_slot'])
 # plt.show()
+s.run(50)
+data = s.get_evaluation_data()
 
-# for i in range(50):
-#     print(data['data_of_slot']['server_loading_task'][i])
-#     print(data['data_of_slot']['server_loading_new_task'][i])
-#     print(data['data_of_slot']['unfinished_task_num'][i])
     
 # print(data['data_of_slot']['server_loading_task'])
 # print(data['data_of_slot']['server_loading_new_task'])
@@ -43,15 +39,15 @@ s.add_tasks_to_servers(tasks)
 
 
 # This is for testing
-while True:
-    command = input('input command...\n')
-    if command == 's':
-        s.show_status()
-    if command == 'r':
-        s.run_one()
-        print('run')
-    if command == 'd':
-        data = json.dumps(s.get_pack_data())
+# while True:
+#     command = input('input command...\n')
+#     if command == 's':
+#         s.show_status()
+#     if command == 'r':
+#         s.run_one()
+#         print('run')
+#     if command == 'd':
+#         data = json.dumps(s.get_pack_data())
         
 #         print(data)
     

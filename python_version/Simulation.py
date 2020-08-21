@@ -79,17 +79,25 @@ class Simulator:
         for i in range(self.server_num):
             e = self.run_server(i)
             # print('Server ' + str(i) + ': ' + str(e))
-            recent_events.append(e)
+            if e != None:
+                recent_events.append(e)
         
         self.run_sync(recent_events)
 
         self.record(recent_events)
         self.random_insert_task()
-        print(self.finished_task_num, len(self.tasks))
 
         self.time_slot += 1
         Server.time_slot += 1
         # self.show_status()
+
+        # This can show each round task queue.
+        # Provide quite good view of what's going on.
+        print('finished task:', self.finished_task_num, 'all tasks:', len(self.tasks))
+
+        print([len(s.tasks) for s in self.servers])
+        print([len(s.propagation_tasks) for s in self.servers])
+        print([len(s.new_tasks) for s in self.servers])
 
     
     def run_server(self, server_id):
@@ -103,19 +111,20 @@ class Simulator:
         # pass them to corresponding server
         for event in events:
             self.event_dealer(event)
+        
+        # Scan the status of all servers
+        for s in self.servers:
+            status = s.get_status()
+            if status['state'] == 'Delivery':
+                status['task'].deliver(self.time_slot)
+                self.finished_task_num += 1
     
-    def record(self, recent_events):
-        # add the info into history
-        self.events.append(recent_events)
-        self.data_of_slot['unfinished_task_num'].append(len(self.tasks) - self.finished_task_num)
-        self.data_of_slot['server_loading_task'].append([len(s.tasks) for s in self.servers])
-        self.data_of_slot['server_loading_new_task'].append([len(s.new_tasks) for s in self.servers])
-
-        return
-
 
     # not done    
     def event_dealer(self, event):
+
+        #TODO 2020/08/21
+        # This event dealer should only take care of Propogation. (at least so far)
 
         # deal with propagation list
         if event == None:
@@ -123,15 +132,26 @@ class Simulator:
         elif event.name == "Propagation":
             self.assign_task((event.server_id + 1) % self.server_num, event.get_task())
   
-        elif event.name == "Delivery":
-            t = event.get_task()
-            t.deliver(self.time_slot)
-            self.finished_task_num += 1
+        # elif event.name == "Delivery":
+        #     t = event.get_task()
+        #     t.deliver(self.time_slot)
+        #     self.finished_task_num += 1
         else:
             #if it is execution, do nothing 
             #scheduling is server's job
             pass
         return
+
+    def record(self, recent_events):
+        # add the info into history
+        self.events.extend(recent_events)
+        self.data_of_slot['unfinished_task_num'].append(len(self.tasks) - self.finished_task_num)
+        self.data_of_slot['server_loading_task'].append([len(s.tasks) for s in self.servers])
+        self.data_of_slot['server_loading_new_task'].append([len(s.new_tasks) for s in self.servers])
+
+        return
+
+
 
     def assign_task(self, server_id, task):
         self.servers[server_id].add_task(task)
@@ -182,13 +202,11 @@ class Simulator:
 
         # Prun event data
         brief_events = []
-        for i, event in enumerate(self.events):
-            for e in event:
-                brief_events.append({
-                    'time_slot': i,
-                    'server_id': e.server_id,
-                    'name': e.name
-                })
+        for e in self.events:
+            brief_events.append({
+                'server_id': e.server_id,
+                'name': e.name
+            })
 
         data = {
             # 'finished_task': finished_tasks,
