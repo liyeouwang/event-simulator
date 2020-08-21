@@ -10,6 +10,7 @@ class Server:
 
     all_new_tasks = []
     all_propagation_tasks = []
+    time_slot = 0
 
     def __init__(self, server_id):
         self.tasks = self.all_tasks[server_id] # a list of Task
@@ -18,6 +19,10 @@ class Server:
         #self.make_decision = False
         self.new_tasks = self.all_new_tasks[server_id]
         self.propagation_tasks = self.all_propagation_tasks[server_id]
+        self.status = {
+            'state': 'IDLE',
+            'task': None,
+        }
 
 
     def event_handler(self, event):
@@ -29,18 +34,23 @@ class Server:
         return
 
     def __str__(self):
-        s = ''
-        s += '\n----Task queue----\n'
+        s = '\n*************************\n'
+        s += 'Status: ' + self.status['state']
+        if self.status['state'] != 'IDLE':
+            s += str(self.status['task'].task_id)
+        s += '\n-------Task queue-------\n'
         for task in self.tasks:
             s += str(task) + '\n'
 
-        s += '----New task----\n'
+        s += '--------New task--------\n'
         for t in self.new_tasks:
             s += str(t) + '\n'
 
         s += '----Propagation task----\n'
         for t in self.propagation_tasks:
             s += str(t) + '\n'
+
+        s += '*************************\n'
 
         return s
     
@@ -73,25 +83,25 @@ class Server:
 
         # ====== execution part ======
         # continue to do execution 
-        e = None
-        e_deli = None
         if len(self.tasks) == 0:
-            e = Event("Idle")               
+            self.status['state'] = 'IDLE'
+            self.status['task'] = None
         elif self.tasks[0].is_done():
             # Delivery
             t = self.tasks.pop(0)
-            e_deli = Event(name="Delivery", task=t, server_id=self.server_id)
+            # e_deli = Event(name="Delivery", task=t, server_id=self.server_id)
+            self.status['state'] = 'Delivery'
+            self.status['task'] = t
+            t.deliver(self.time_slot)
+
         else:
             # Execution:
             self.tasks[0].just_do_it(1)
-            e = Event(name="Execution", task=self.tasks[0], server_id=self.server_id) 
+            # e = Event(name="Execution", task=self.tasks[0], server_id=self.server_id) 
+            self.status['state'] = 'Execution'
+            self.status['task'] = self.tasks[0]
 
-        if e_prop != None:
-            return e_prop
-        elif e_deli != None:
-            return e_deli 
-        else:
-            return e
+        return e_prop
     
     def add_task(self, task):
         self.new_tasks.append(task)
@@ -104,6 +114,10 @@ class Server:
         else:
             self.tasks.append(task)
             self.new_tasks.pop(0)
+
+    def get_status(self):
+        return self.status
+    
 
 
 

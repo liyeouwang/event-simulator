@@ -56,13 +56,9 @@ class Simulator:
 
         print("======= Time Slot " + str(self.time_slot) + " =======")
         print(self)
-        if len(self.events) > 0: 
-            # prevent the empty events in the beginning
-            print('Events:')
-            for i, e in enumerate(self.events[-1]):
-                print('Server ' + str(i) + ': ' + str(e))
-        print("============================\n\n")
+        
         return
+    
 
     def get_task_waiting_time(self, name=None):
         waiting_time = [t.get_waiting_time() if t.is_delivered() else None for t in self.tasks]
@@ -92,6 +88,7 @@ class Simulator:
         print(self.finished_task_num, len(self.tasks))
 
         self.time_slot += 1
+        Server.time_slot += 1
         # self.show_status()
 
     
@@ -141,11 +138,11 @@ class Simulator:
         return
 
     def create_task(self, name="", duration=1, have_done=0, 
-                priority=0, request_time=0, detail="No task description"):
+                priority=0, request_time=0, detail="No task description", task_id=0):
         # use this method to create task
         # so that we can make sure the created tasks are always added to the list.
         t = Task(name=name, duration=duration, have_done=have_done, 
-                priority=priority, request_time=request_time, detail=detail)
+                priority=priority, request_time=request_time, detail=detail, task_id=task_id)
         self.tasks.append(t)
         return t
 
@@ -158,7 +155,7 @@ class Simulator:
                 if uniform(0, 1) < task_config["occur_probability"]:
                     t = self.create_task(name=task_config["name"],
                             duration=randint(task_config["duration_range"][0], task_config["duration_range"][1]),
-                            priority=task_config["priority"], request_time=self.time_slot) 
+                            priority=task_config["priority"], request_time=self.time_slot, task_id=len(self.tasks)) 
                     self.assign_task(i, t)
 
         return
