@@ -32,9 +32,12 @@ def type_to_control(config):
             print(data)
 
 def experiment():
-    config = read_config('config.json')
+    # Set the independent variables
     max_experiment = [2, 5, 10, 25, 50, 100]
+
+    # Set the experiment environment
     experiment_dir = './e1/'
+    config = read_config('config.json')
     os.mkdir(experiment_dir)
     with open(experiment_dir + 'config.json', 'w') as outfile:
         json.dump(config, outfile)

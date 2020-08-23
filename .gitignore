@@ -1,2 +1,4 @@
 *.pyc
 *.dat
+.DS_Store
+evaluation_data.json
