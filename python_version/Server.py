@@ -12,10 +12,10 @@ class Server:
     all_propagation_tasks = []
     time_slot = 0
 
-    def __init__(self, server_id):
+    def __init__(self, server_id, max_tasks):
         self.tasks = self.all_tasks[server_id] # a list of Task
         self.server_id = server_id
-        self.max_tasks = 5
+        self.max_tasks = max_tasks
         #self.make_decision = False
         self.new_tasks = self.all_new_tasks[server_id]
         self.propagation_tasks = self.all_propagation_tasks[server_id]
@@ -80,6 +80,9 @@ class Server:
             t = self.propagation_tasks[0]
             e_prop = Event(name="Propagation", task=t, server_id=self.server_id)
             self.propagation_tasks.pop(0)
+            
+            # if return here, then it means that propagation cost a time slot
+            # return e_prop
 
         # ====== execution part ======
         # continue to do execution 

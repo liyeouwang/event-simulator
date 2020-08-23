@@ -1,31 +1,36 @@
 {
-    "server_num": 3,
+    "server_num": 10,
+    "server_max_task": 50,
     "tasks_config": [
         {
             "name": "video_streaming",
-            "occur_probability": 0.2,
-            "duration_range": [1, 5],
+            "occur_probability": 0.25,
+            "duration_range": [3, 3],
             "priority": 5
         },
         {
             "name": "dense_computing",
-            "occur_probability": 0.5,
+            "occur_probability": 0,
             "duration_range": [5, 15],
             "priority": 3
         },
         {
             "name": "trolley_problem",
-            "occur_probability": 0.02,
+            "occur_probability": 0,
             "duration_range": [1, 3],
             "priority": 1
         }
     ],
     "data_wanted": {
-        "all_slots_unfinished_task_num": true,
-        "all_slots_server_loading_task": true,
-        "all_slots_server_loading_new_task": true,
-        "all_slots_server_lodaing_propagation_task": true,
-        "all_slots_finished_task_num": true
+        "all_slots_unfinished_task_num": false,
+        "all_slots_server_loading_task": false,
+        "all_slots_server_loading_new_task": false,
+        "all_slots_server_lodaing_propagation_task": false,
+        "all_slots_finished_task_num": false,
+        "tasks_info": false,
+        "delivered_tasks_info": true,
+        "complete_simulation": false,
+        "events": false
     },
     "data_collection_interval": 10
 }

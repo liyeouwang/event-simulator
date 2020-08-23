@@ -18,11 +18,11 @@ class Simulator:
         Server.all_new_tasks = [[] for i in range(self.server_num)]
 
         # Build servers 
-        self.servers = [Server(i) for i in range(self.server_num)]
+        self.servers = [Server(i, self.config["server_max_task"]) for i in range(self.server_num)]
 
         self.events = [] # events of each server in time slot
         self.tasks = []
-        self.time_slot = 1
+        self.time_slot = 0
         self.data_wanted = config['data_wanted']
         self.data = {}
         self.init_data()
@@ -43,28 +43,17 @@ class Simulator:
             self.tasks.append(task[1])
             self.assign_task(task[0], task[1])
         return
-        # for task in self.all_tasks:
-        #     self.servers[task[0]].add_task(task[1])
-        # return
 
     def show_status(self):
-        # print out current status
-        # including: 
-        # All Server status
-        # What round is this?
-
         print("======= Time Slot " + str(self.time_slot) + " =======")
-        print(self)
-        
+        print(self)   
         return
-    
 
     def get_task_waiting_time(self, name=None):
         waiting_time = [t.get_waiting_time() if t.is_delivered() else None for t in self.tasks]
         return waiting_time
 
     def run(self, round=15):
-
         while True:
             if self.time_slot > round:
                 break
@@ -140,9 +129,6 @@ class Simulator:
             pass
         return
 
-
-
-
     def assign_task(self, server_id, task):
         self.servers[server_id].add_task(task)
         return
@@ -159,8 +145,6 @@ class Simulator:
     def random_insert_task(self):
         tasks_config = self.config["tasks_config"]
         for i in range(self.server_num):
-            if i % 2 == 0:
-                continue
             for task_config in tasks_config:
                 if uniform(0, 1) < task_config["occur_probability"]:
                     t = self.create_task(name=task_config["name"],
@@ -184,6 +168,12 @@ class Simulator:
             self.data["all_slots_server_lodaing_propagation_task"] = []
         if self.data_wanted["all_slots_finished_task_num"]:
             self.data["all_slots_finished_task_num"] = []
+        if self.data_wanted["tasks_info"]:
+            self.data["tasks_info"] = []
+        if self.data_wanted["delivered_tasks_info"]:
+            self.data["delivered_tasks_info"] = []
+        if self.data_wanted["events"]:
+            self.data["events"] = []
 
     def record_data(self, recent_events):
         # add the info into history
@@ -200,7 +190,6 @@ class Simulator:
             self.data["all_slots_finished_task_num"].append(self.finished_task_num)
         return
 
-
     def get_pack_data(self):
         data = {
             'server_num': self.server_num,
@@ -210,29 +199,27 @@ class Simulator:
         return data
 
     def get_data(self):
+        if self.data_wanted['tasks_info']:
+            self.data['tasks_info'] = [t.__dict__ for t in self.tasks]
+        if self.data_wanted['delivered_tasks_info']:
+            for t in self.tasks:
+                if t.is_delivered():
+                    self.data['delivered_tasks_info'].append({
+                        'id': t.task_id,
+                        'name': t.name,
+                        'waiting_time': t.get_waiting_time(),
+                        'priority': t.priority,
+                        'duration': t.duration
+                    })
+
+        if self.data_wanted['events']:
+            for e in self.events:
+                self.data['events'].append({
+                    'server_id': e.server_id,
+                    'name': e.name
+                })
         return self.data
 
-    def get_evaluation_data(self):
-        # Prun task data
-        finished_tasks = []
-        for t in self.tasks:
-            if t.is_delivered():
-                finished_tasks.append({
-                    'name': t.name,
-                    'waiting_time': t.get_waiting_time(),
-                    'priority': t.priority,
-                    'duration': t.duration
-                })
-
-        # Prun event data
-        brief_events = []
-        for e in self.events:
-            brief_events.append({
-                'server_id': e.server_id,
-                'name': e.name
-            })
-
-        return
 
 
     

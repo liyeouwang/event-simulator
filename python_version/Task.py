@@ -36,4 +36,4 @@ class Task:
         return self.delivery_time > 0
 
     def get_waiting_time(self):
-        return  self.delivery_time - self.request_time
+        return  self.delivery_time - self.request_time - self.duration
