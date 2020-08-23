@@ -24,10 +24,6 @@ class Server:
         # Handle the event. Maybe add tasks to taskQueue? Or anything...
         pass
 
-    def insert_task(self, task):
-        self.tasks.append(task)
-        return
-
     def __str__(self):
         s = ''
         s += 'Task queue\n'
