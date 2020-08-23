@@ -23,11 +23,10 @@ class Simulator:
         self.events = [] # events of each server in time slot
         self.tasks = []
         self.time_slot = 1
-        self.data_of_slot = {
-            'unfinished_task_num': [],
-            'server_loading_task': [],
-            'server_loading_new_task': []
-        }
+        self.data_wanted = config['data_wanted']
+        self.data = {}
+        self.init_data()
+
         self.finished_task_num = 0
 
 
@@ -84,7 +83,8 @@ class Simulator:
         
         self.run_sync(recent_events)
 
-        self.record(recent_events)
+        if self.time_slot % self.config['data_collection_interval'] == 0:
+            self.record_data(recent_events)
         self.random_insert_task()
 
         self.time_slot += 1
@@ -93,12 +93,10 @@ class Simulator:
 
         # This can show each round task queue.
         # Provide quite good view of what's going on.
-        print('finished task:', self.finished_task_num, 'all tasks:', len(self.tasks))
-
-        print([len(s.tasks) for s in self.servers])
-        print([len(s.propagation_tasks) for s in self.servers])
-        print([len(s.new_tasks) for s in self.servers])
-
+        # print('finished task:', self.finished_task_num, 'all tasks:', len(self.tasks))
+        # print([len(s.tasks) for s in self.servers])
+        # print([len(s.propagation_tasks) for s in self.servers])
+        # print([len(s.new_tasks) for s in self.servers])
     
     def run_server(self, server_id):
         # Time to run this server
@@ -124,7 +122,7 @@ class Simulator:
     def event_dealer(self, event):
 
         #TODO 2020/08/21
-        # This event dealer should only take care of Propogation. (at least so far)
+        # This event dealer should only take care of propagation. (at least so far)
 
         # deal with propagation list
         if event == None:
@@ -142,14 +140,6 @@ class Simulator:
             pass
         return
 
-    def record(self, recent_events):
-        # add the info into history
-        self.events.extend(recent_events)
-        self.data_of_slot['unfinished_task_num'].append(len(self.tasks) - self.finished_task_num)
-        self.data_of_slot['server_loading_task'].append([len(s.tasks) for s in self.servers])
-        self.data_of_slot['server_loading_new_task'].append([len(s.new_tasks) for s in self.servers])
-
-        return
 
 
 
@@ -180,6 +170,37 @@ class Simulator:
 
         return
 
+
+    # -----------------------------
+    # Code below is just about data collection
+    def init_data(self):
+        if self.data_wanted["all_slots_unfinished_task_num"]:
+            self.data["all_slots_unfinished_task_num"] = []
+        if self.data_wanted["all_slots_server_loading_task"]:
+            self.data["all_slots_server_loading_task"] = []
+        if self.data_wanted["all_slots_server_loading_new_task"]:
+            self.data["all_slots_server_loading_new_task"] = []
+        if self.data_wanted["all_slots_server_lodaing_propagation_task"]:
+            self.data["all_slots_server_lodaing_propagation_task"] = []
+        if self.data_wanted["all_slots_finished_task_num"]:
+            self.data["all_slots_finished_task_num"] = []
+
+    def record_data(self, recent_events):
+        # add the info into history
+        self.events.extend(recent_events)
+        if self.data_wanted["all_slots_unfinished_task_num"]:
+            self.data["all_slots_unfinished_task_num"].append(len(self.tasks) - self.finished_task_num)
+        if self.data_wanted["all_slots_server_loading_task"]:
+            self.data["all_slots_server_loading_task"].append([len(s.tasks) for s in self.servers])
+        if self.data_wanted["all_slots_server_loading_new_task"]:
+            self.data["all_slots_server_loading_new_task"].append([len(s.new_tasks) for s in self.servers])
+        if self.data_wanted["all_slots_server_lodaing_propagation_task"]:
+            self.data["all_slots_server_lodaing_propagation_task"].append([len(s.propagation_tasks) for s in self.servers])
+        if self.data_wanted["all_slots_finished_task_num"]:
+            self.data["all_slots_finished_task_num"].append(self.finished_task_num)
+        return
+
+
     def get_pack_data(self):
         data = {
             'server_num': self.server_num,
@@ -187,6 +208,9 @@ class Simulator:
             'events': [[e.__dict__ for e in event] for event in self.events]
         }
         return data
+
+    def get_data(self):
+        return self.data
 
     def get_evaluation_data(self):
         # Prun task data
@@ -208,13 +232,7 @@ class Simulator:
                 'name': e.name
             })
 
-        data = {
-            # 'finished_task': finished_tasks,
-            # 'events': brief_events,
-            'data_of_slot': self.data_of_slot
-        }
-
-        return data
+        return
 
 
     

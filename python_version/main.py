@@ -29,7 +29,7 @@ s.add_tasks_to_servers(tasks)
 # plt.plot(data['data_of_slot'])
 # plt.show()
 s.run(50)
-data = s.get_evaluation_data()
+print(s.get_data())
 
     
 # print(data['data_of_slot']['server_loading_task'])
