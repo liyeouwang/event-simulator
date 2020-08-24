@@ -168,6 +168,8 @@ class Simulator:
             self.data["all_slots_server_lodaing_propagation_task"] = []
         if self.data_wanted["all_slots_finished_task_num"]:
             self.data["all_slots_finished_task_num"] = []
+        if self.data_wanted["all_slots_task_num"]:
+            self.data["all_slots_task_num"] = []
         if self.data_wanted["tasks_info"]:
             self.data["tasks_info"] = []
         if self.data_wanted["delivered_tasks_info"]:
@@ -188,6 +190,8 @@ class Simulator:
             self.data["all_slots_server_lodaing_propagation_task"].append([len(s.propagation_tasks) for s in self.servers])
         if self.data_wanted["all_slots_finished_task_num"]:
             self.data["all_slots_finished_task_num"].append(self.finished_task_num)
+        if self.data_wanted["all_slots_task_num"]:
+            self.data["all_slots_task_num"].append(len(self.tasks))
         return
 
     def get_pack_data(self):

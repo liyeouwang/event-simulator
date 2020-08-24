@@ -26,9 +26,10 @@
         "all_slots_server_loading_task": false,
         "all_slots_server_loading_new_task": false,
         "all_slots_server_lodaing_propagation_task": false,
-        "all_slots_finished_task_num": false,
+        "all_slots_finished_task_num": true,
+        "all_slots_task_num": true,
         "tasks_info": false,
-        "delivered_tasks_info": true,
+        "delivered_tasks_info": false,
         "complete_simulation": false,
         "events": false
     },
