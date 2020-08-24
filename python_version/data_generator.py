@@ -14,6 +14,6 @@ FILENAME = "input_task.dat"
 with open(FILENAME, "w") as f:
     for i in range(DATA_NUM):
         task = choice(TASKS_CONFIG)
-        s = str(randint(0, SERVER_NUM-1)) + ' ' + task["name"] +' '+ str(randint(task["duration_range"][0], task["duration_range"][1])) +' '+ str(0)+'\n'
+        s = str(randint(0, SERVER_NUM-1)) + ' ' + task["name"] +' '+ str(randint(task["duration_range"][0], task["duration_range"][1])) +' '+ str(task["priority"])+'\n'
         f.write(s)
 f.close()
