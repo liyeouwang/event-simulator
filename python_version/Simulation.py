@@ -5,6 +5,7 @@ sys.path.append(".")
 from Task import Task
 from Event import Event
 from Server import Server
+from Vehicle import Vehicle
 
 class Simulator:
     def __init__(self, config):
@@ -19,6 +20,10 @@ class Simulator:
 
         # Build servers 
         self.servers = [Server(i, self.config["server_max_task"]) for i in range(self.server_num)]
+
+        # Let's have some vehicles!
+        self.vehicles = [Vehicle(i) for i in range(self.config["vehicle_num"])]
+        Vehicle.config = self.config
 
         self.events = [] # events of each server in time slot
         self.tasks = []
@@ -49,6 +54,20 @@ class Simulator:
         print(self)   
         return
 
+    def show_server_status(self):
+        s = ''
+        s += 'Number of servers: {}\n'.format(len(self.servers))
+        for i in range(len(self.servers)):
+            s += 'Server {}: {}\n'.format(i, str(self.servers[i]))
+        print(s)
+
+    def show_vehicle_status(self):
+        s = ''
+        s += 'Number of vehicle: {}\n'.format(len(self.vehicles))
+        for i in range(len(self.vehicles)):
+            s += str(self.vehicles[i])
+        print(s)
+
     def get_task_waiting_time(self, name=None):
         waiting_time = [t.get_waiting_time() if t.is_delivered() else None for t in self.tasks]
         return waiting_time
@@ -60,40 +79,33 @@ class Simulator:
             self.run_one()
     
     def run_one(self):
-        # Run the simulation. Can be a while loop?
-        # run all server 
-        # and then run synchronization
+        # Run servers
         recent_events = []
-        for i in range(self.server_num):
-            e = self.run_server(i)
-            # print('Server ' + str(i) + ': ' + str(e))
+        for s in self.servers:
+            e = s.run()
             if e != None:
                 recent_events.append(e)
+
+        # Run vehicles
+        new_tasks = []
+        for v in self.vehicles:
+            t = v.run()
+            if t != None:
+                new_tasks.append(t)
         
-        self.run_sync(recent_events)
+        self.deal_with_servers(recent_events)
+        self.deal_with_vehicles(new_tasks)
 
         if self.time_slot % self.config['data_collection_interval'] == 0:
             self.record_data(recent_events)
-        self.random_insert_task()
+        # self.random_insert_task()
 
         self.time_slot += 1
         Server.time_slot += 1
-        # self.show_status()
+        Vehicle.time_slot += 1
+        self.show_status()
 
-        # This can show each round task queue.
-        # Provide quite good view of what's going on.
-        # print('finished task:', self.finished_task_num, 'all tasks:', len(self.tasks))
-        # print([len(s.tasks) for s in self.servers])
-        # print([len(s.propagation_tasks) for s in self.servers])
-        # print([len(s.new_tasks) for s in self.servers])
-    
-    def run_server(self, server_id):
-        # Time to run this server
-        # get event from server
-        event = self.servers[server_id].run()
-        return event
-    
-    def run_sync(self, events):
+    def deal_with_servers(self, events):
         # already get all events from servers in this round
         # pass them to corresponding server
         for event in events:
@@ -103,10 +115,10 @@ class Simulator:
         for s in self.servers:
             status = s.get_status()
             if status['state'] == 'Delivery':
+                self.vehicles[status['task'].vehicle_id].receive_delivery(status['task'])
                 status['task'].deliver(self.time_slot)
                 self.finished_task_num += 1
     
-
     # not done    
     def event_dealer(self, event):
 
@@ -129,6 +141,21 @@ class Simulator:
             pass
         return
 
+    def deal_with_vehicles(self, new_tasks):
+        for t in new_tasks:
+            t.task_id = len(self.tasks)
+            self.tasks.append(t)
+
+            # TODO
+            # Simulator should assign tasks to servers where vehicles are connected
+            # Position info should come into place
+            # Here, just assign to Server[self.time_slot%5]
+            self.assign_task(self.time_slot%3, t)
+        return
+
+
+    # ---------------------------------
+    # Here is for task-related method
     def assign_task(self, server_id, task):
         self.servers[server_id].add_task(task)
         return
@@ -227,5 +254,16 @@ class Simulator:
         return self.data
 
 
+    # -----------------------------------
+    # Some legacy code. 
+    # Use for debugging.
+    def print_info(self):
+        # This can show each round task queue.
+        # Provide quite good view of what's going on.
+        print('finished task:', self.finished_task_num, 'all tasks:', len(self.tasks))
+        print([len(s.tasks) for s in self.servers])
+        print([len(s.propagation_tasks) for s in self.servers])
+        print([len(s.new_tasks) for s in self.servers])
+        return 
 
     

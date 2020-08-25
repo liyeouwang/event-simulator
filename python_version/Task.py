@@ -1,6 +1,7 @@
 class Task:
     def __init__(self, name="", duration=1, have_done=0, 
-                priority=0, request_time=0, detail="No task description", task_id=0):
+                priority=0, request_time=0, detail="", 
+                task_id=0, vehicle_id=0):
         self.name = name # Ex: Video streaming, AI computing
         self.detail = detail
         self.duration = duration
@@ -10,6 +11,7 @@ class Task:
         self.request_time = request_time
         self.delivery_time = -1
         self.task_id = task_id
+        self.vehicle_id =vehicle_id
         return
     
     def __str__(self):
