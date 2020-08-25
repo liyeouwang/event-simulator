@@ -23,6 +23,10 @@ def type_to_control(config):
         command = input('input command...\n')
         if command == 's':
             s.show_status()
+        if command == 'sv':
+            s.show_vehicle_status()
+        if command == 'ss':
+            s.show_server_status()
         if command == 'r':
             s.run_one()
             print('run')
@@ -101,7 +105,9 @@ def experiment():
     # plt.show()
 
 def main():
-    experiment()
+    # experiment()
+    config = read_config('config.json')
+    type_to_control(config)
  
     return
 
