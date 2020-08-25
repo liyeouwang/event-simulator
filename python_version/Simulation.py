@@ -145,6 +145,8 @@ class Simulator:
     def random_insert_task(self):
         tasks_config = self.config["tasks_config"]
         for i in range(self.server_num):
+            if i % 2 == 0:
+                continue
             for task_config in tasks_config:
                 if uniform(0, 1) < task_config["occur_probability"]:
                     t = self.create_task(name=task_config["name"],

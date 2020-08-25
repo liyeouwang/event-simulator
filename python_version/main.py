@@ -31,7 +31,9 @@ def type_to_control(config):
         
             print(data)
 
-def experiment():
+def bad_experiment():
+    # This experiment use bad evaluating metrics
+
     # Set the independent variables
     max_experiment = [2, 5, 10, 25, 50, 100]
 
@@ -58,6 +60,26 @@ def experiment():
             a[n].plot(avg_awaiting_time)
         fig.savefig(experiment_dir + str(m)+'.png''')
         plt.close(fig)
+
+def experiment():
+    # Set the independent variables
+    # max_experiment = [2, 5, 10, 25, 50, 100]
+
+    # Set the experiment environment
+    # experiment_dir = './e2/'
+    config = read_config('config.json')
+    # os.mkdir(experiment_dir)
+    # with open(experiment_dir + 'config.json', 'w') as outfile:
+    #     json.dump(config, outfile)
+
+    s = Simulator(config)
+    s.run(3000)
+    config['data_collection_interval'] = 10
+    data = s.get_data()
+    plt.plot(data["all_slots_task_num"])
+    plt.plot(data["all_slots_finished_task_num"])
+
+    plt.show()
 
     # s = Simulator(config)
     # fig, ((a[0], a[1]), (a[2], a[3])) = plt.subplots(2, 2)
