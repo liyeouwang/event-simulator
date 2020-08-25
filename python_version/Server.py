@@ -58,46 +58,43 @@ class Server:
         # Ex: "Execution. task_info"
         # Ex: Propagation. to which server? what task?
         # Ex: Delivery...
-
-        # 1. deal with propagation list (simulator do it?)
-        # 2. check if there is new task arrival. 
-        # 3. If there is new task arrival, make decision. (append to propagation list or remain in task list)
-        # 4. executing tasks 
-        # 5. return event 
       
+    #processor 1: make decision & execute task ======
+        # Check if there is new task arrival. 
+        # If there is new task arrival, make decision. 
+        # (append to propagation list or remain in task list)
+
         # ====== decision part (propagate or add to task queue) ======
         while len(self.new_tasks):
-            # make decision 
             self.make_decision(self.new_tasks[0])
 
-        # ====== propagation buffer ======
-        e_prop = None 
-        if len(self.propagation_tasks) != 0:
-            t = self.propagation_tasks[0]
-            e_prop = Event(name="Propagation", task=t, server_id=self.server_id)
-            self.propagation_tasks.pop(0)
-            
-            # if return here, then it means that propagation cost a time slot
-            # return e_prop
-
         # ====== execution part ======
-        # continue to do execution 
         if len(self.tasks) == 0:
             self.status['state'] = 'IDLE'
             self.status['task'] = None
         elif self.tasks[0].is_done():
             # Delivery
             t = self.tasks.pop(0)
-            # e_deli = Event(name="Delivery", task=t, server_id=self.server_id)
-            self.status['state'] = 'Delivery'
-            self.status['task'] = t
-
+            #Check if the vehicle is in range 
+            #If yes, delivery. If not, propagate 
+            if self.in_range(t):
+                self.status['state'] = 'Delivery'
+                self.status['task'] = t
+            else:
+                self.propagation_tasks.append(t)
         else:
             # Execution:
             self.tasks[0].just_do_it(1)
-            # e = Event(name="Execution", task=self.tasks[0], server_id=self.server_id) 
             self.status['state'] = 'Execution'
             self.status['task'] = self.tasks[0]
+
+    #processor 2: deal with propagation ====== 
+        # ====== propagation buffer ======
+        e_prop = None 
+        if len(self.propagation_tasks) != 0:
+            t = self.propagation_tasks[0]
+            e_prop = Event(name="Propagation", task=t, server_id=self.server_id)
+            self.propagation_tasks.pop(0)
 
         return e_prop
     
@@ -116,6 +113,9 @@ class Server:
     def get_status(self):
         return self.status
     
+    def in_range(self, task):
+        #TODO: check if the corresponding vehicle is in this server's range
+        return True
 
 
 
